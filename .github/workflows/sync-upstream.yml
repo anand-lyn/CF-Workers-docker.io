@@ -21,7 +21,7 @@ jobs:
 
       - name: 检查并同步上游仓库
         run: |
-          git remote add upstream https://github.com/上游仓库路径.git
+          git remote add upstream https://github.com/cmliu/CF-Workers-docker.io.git
           git fetch upstream
           LOCAL=$(git rev-parse HEAD)
           REMOTE=$(git rev-parse upstream/main)
