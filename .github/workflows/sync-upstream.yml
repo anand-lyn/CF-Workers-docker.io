@@ -25,6 +25,7 @@ jobs:
           git fetch upstream
           LOCAL=$(git rev-parse HEAD)
           REMOTE=$(git rev-parse upstream/main)
+          echo "local $LOCAL remote $REMOTE"
           if [ "$LOCAL" != "$REMOTE" ]; then
             git checkout main
             git merge upstream/main --allow-unrelated-histories || echo "No changes to merge"
