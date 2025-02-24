@@ -25,9 +25,9 @@ jobs:
           git fetch upstream
           git checkout main
           MERGE_OUTPUT=$(git merge upstream/main --allow-unrelated-histories 2>&1)
-          echo "$MERGE_OUTPUT"
+          echo "lalalallal-----$MERGE_OUTPUT"
 
-          if echo "$MERGE_OUTPUT" | grep -q "Your branch is up to date with 'origin/main'."; then
+          if echo "$MERGE_OUTPUT" | grep -q "Your branch is up to date"; then
             echo "Merge result: No new updates."
             echo "updated=false" >> $GITHUB_ENV
           else
@@ -36,7 +36,7 @@ jobs:
           fi
 
       - name: 推送同步后的代码到 Fork
-        if: env.update == 'true'
+        if: env.updated == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
