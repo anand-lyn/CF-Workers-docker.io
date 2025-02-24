@@ -23,13 +23,21 @@ jobs:
         run: |
           git remote add upstream https://github.com/cmliu/CF-Workers-docker.io.git
           git fetch upstream
-          LOCAL=$(git rev-parse HEAD)
-          REMOTE=$(git rev-parse upstream/main)
-          echo "local $LOCAL remote $REMOTE"
-          if [ "$LOCAL" != "$REMOTE" ]; then
-            git checkout main
-            git merge upstream/main --allow-unrelated-histories || echo "No changes to merge"
-            git push origin main
+          git checkout main
+          MERGE_OUTPUT=$(git merge upstream/main --allow-unrelated-histories 2>&1)
+          echo "$MERGE_OUTPUT"
+
+          if echo "$MERGE_OUTPUT" | grep -q "Your branch is up to date with 'origin/main'."; then
+            echo "Merge result: No new updates."
+            echo "updated=false" >> $GITHUB_ENV
           else
-            echo "No updates found."
+            echo "Merge result: New updates detected!"
+            echo "updated=true" >> $GITHUB_ENV
           fi
+
+      - name: 推送同步后的代码到 Fork
+        if: env.update == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push origin main
